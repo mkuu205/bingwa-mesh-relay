@@ -67,7 +67,6 @@ export class HeartbeatService {
     return prisma.device.findMany({
       where: {
         lastSeenAt: { lt: threshold },
-        NOT: { lastSeenAt: { equals: null } as any }
       },
     });
   }
