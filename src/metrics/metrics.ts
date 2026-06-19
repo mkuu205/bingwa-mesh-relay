@@ -49,8 +49,4 @@ export function registerMetricsRoute(fastify: FastifyInstance) {
     reply.header('Content-Type', registry.contentType);
     return registry.metrics();
   });
-
-  fastify.get('/health', async () => ({ status: 'ok', timestamp: Date.now() }));
-  fastify.get('/readiness', async () => ({ status: 'ready' }));
-  fastify.get('/liveness', async () => ({ status: 'alive' }));
 }

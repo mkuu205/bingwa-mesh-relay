@@ -45,8 +45,8 @@ fastify.register(adminRoutes, { prefix: '/api/admin' });
 
 // Health check
 fastify.get('/health', async () => ({ status: 'ok', timestamp: Date.now() }));
-fastify.get('/readiness', async () => ({ status: 'ready' }));
-fastify.get('/liveness', async () => ({ status: 'alive' }));
+fastify.get('/ready', async () => ({ status: 'ready' }));
+fastify.get('/live', async () => ({ status: 'alive' }));
 
 // WebSocket Handler
 fastify.register(async (instance) => {

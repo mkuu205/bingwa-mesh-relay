@@ -1,0 +1,10 @@
+import { Registry, Counter, Gauge, Histogram } from 'prom-client';
+import { FastifyInstance } from 'fastify';
+export declare const registry: Registry<"text/plain; version=0.0.4; charset=utf-8">;
+export declare const httpRequestsTotal: Counter<"method" | "route" | "status_code">;
+export declare const wsConnectionsTotal: Gauge<string>;
+export declare const messagesProcessedTotal: Counter<"type">;
+export declare const dbQueryDuration: Histogram<"operation">;
+export declare const meshGroupsTotal: Gauge<string>;
+export declare const authFailuresTotal: Counter<"reason">;
+export declare function registerMetricsRoute(fastify: FastifyInstance): void;
