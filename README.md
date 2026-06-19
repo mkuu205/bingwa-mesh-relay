@@ -80,7 +80,7 @@ This project is pre-configured for [Render](https://render.com).
 
 ### WebSocket Protocol
 
-Connect to `/ws`. Authentication is required via an `AUTH` message immediately after connection.
+Connect to `wss://bingwa-mesh-relay.onrender.com/ws`. Authentication is required via an `AUTH` message immediately after connection.
 
 **Message Format**:
 ```json
