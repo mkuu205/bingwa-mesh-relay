@@ -2,7 +2,6 @@ import { FastifyInstance } from 'fastify';
 import { WebSocket } from 'ws';
 import crypto from 'node:crypto';
 import { ConnectionManager } from './manager.js';
-import { registerWebSocketHandler } from './websocket/handler.js';
 import { AuthService } from '../auth/service.js';
 import { MessageType, BaseMessageSchema } from '../protocol/types.js';
 import { DeviceService } from '../services/device.service.js';
