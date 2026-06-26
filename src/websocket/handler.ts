@@ -21,9 +21,30 @@ export function registerWebSocketHandler(fastify: FastifyInstance) {
     let authenticatedDeviceId: string | null = null;
 
     connection.on('message', async (data: string) => {
+      // CHANGE 1: Add raw message logging
+      logger.info(
+        { raw: data.toString() },
+        "RAW WEBSOCKET MESSAGE"
+      );
+
       try {
-        const rawMessage = JSON.parse(data);
+        const rawMessage = JSON.parse(data.toString());
+        
+        // CHANGE 1: Add parsed message logging
+        logger.info(
+          rawMessage,
+          "PARSED WEBSOCKET MESSAGE"
+        );
+
+        // CHANGE 2: Add Zod validation logging
         const message = BaseMessageSchema.parse(rawMessage);
+        logger.info(
+          {
+            type: message.type,
+            senderId: message.senderId
+          },
+          "MESSAGE PASSED ZOD VALIDATION"
+        );
 
         // Idempotency check for all messages
         const isDuplicate = await checkIdempotency(message.messageId);
@@ -94,11 +115,27 @@ export function registerWebSocketHandler(fastify: FastifyInstance) {
           message.type === MessageType.HELLO &&
           !authenticatedDeviceId
         ) {
+          // CHANGE 3: Add HELLO processing log
+          logger.info(
+            {
+              senderId: message.senderId
+            },
+            "PROCESSING HELLO"
+          );
+
           authenticatedDeviceId = message.senderId;
 
           await ConnectionManager.addConnection(
             authenticatedDeviceId,
             connection as any
+          );
+
+          // CHANGE 3: Add HELLO authenticated log
+          logger.info(
+            {
+              deviceId: authenticatedDeviceId
+            },
+            "HELLO AUTHENTICATED"
           );
 
           // Ensure device exists in database
@@ -143,7 +180,15 @@ export function registerWebSocketHandler(fastify: FastifyInstance) {
         await handleMessage(authenticatedDeviceId, message, connection as any);
 
       } catch (err) {
-        logger.error({ err }, 'WebSocket message error');
+        // CHANGE 1: Enhanced error logging with raw data
+        logger.error(
+          {
+            error: err,
+            raw: data.toString()
+          },
+          "FAILED TO PARSE MESSAGE"
+        );
+        
         if (connection.readyState === WebSocket.OPEN) {
           connection.send(JSON.stringify({
             protocolVersion: "1",
